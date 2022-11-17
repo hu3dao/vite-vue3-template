@@ -508,3 +508,41 @@ plugins: [vue(), eslintPlugin(), stylelintPlugin({ fix: true })], // fix: true �
   ]
 }
 ```
+
+## 调试功能与配置文件
+
+团队成员 vscode 配置可能不一样，可能会对 eslint、prettier 和 stylelint 的使用出
+现效果不一致的问题，所以可以为每个项目设置一个 vscode 的配置文件，当开发该项目时
+，就会以此配置文件为准
+
+在.vscode 文件夹新建 settings.json 文件
+
+```json
+// .vscode/settings.json
+
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll.stylelint": true
+  },
+  "stylelint.validate": ["css", "scss", "less", "vue"],
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[ts]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
+```
+
+## 环境变量和模式
+
+环境一般分为：开发、测试、预发布和生产

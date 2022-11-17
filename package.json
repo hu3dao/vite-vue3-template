@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
+    "build:pre": "vue-tsc && vite build --mode staging",
+    "build:pro": "vue-tsc && vite build --mode production",
     "preview": "vite preview",
     "lint": "eslint src/**/*.{js,jsx,ts,tsx,vue} --fix",
     "lint:style": "stylelint **/*.{html,vue,css,sass,scss} --fix",

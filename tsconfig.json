@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    // 指定es的目标版本
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    // 决定如何处理模块
+    "moduleResolution": "Node",
+    "strict": true,
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    // 编译过程中需要引入的库文件的列表  DOM.Iterable 迭代器需要使用到它
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "noEmit": true
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

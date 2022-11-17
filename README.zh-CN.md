@@ -256,11 +256,16 @@ components.d.ts
 
 ### 安装依赖
 
+- @commitlint/cli - commitlint 的核心代码库
+- @commitlint/config-conventional - 通用的提交规范
+
 ```
-pnpm install husky lint-staged -D
+pnpm install husky lint-staged @commitlint/cli @commitlint/config-conventional -D
 
 + husky 8.0.2
 + lint-staged 13.0.3
++ @commitlint/cli 17.2.0
++ @commitlint/config-conventional 17.2.0
 ```
 
 ### 生成 husky 脚本
@@ -269,6 +274,9 @@ pnpm install husky lint-staged -D
 
 - prepare - 在开发模式下（运行 npm install 时），就会运行此脚本命令，简单的说就
   是安装依赖的时候就会去生成 husky 的脚本
+- husky 命令
+  - add - 添加一个钩子
+  - set - 覆盖一个钩子
 
 ```json
   "scripts": {
@@ -280,11 +288,11 @@ pnpm install husky lint-staged -D
 pnpm prepare
 ```
 
-### 添加 git 钩子函数
+### commit 前代码校验及格式化
 
-- pre-commit 钩子会在 git commit 命令执行前运行
-- add - 添加一个钩子
-- set - 覆盖一个钩子
+#### 添加 git 的 pre-commit 钩子
+
+- pre-commit 钩子会在 git commit 命令执行前触发
 
 执行下面的命令添加 pre-commit 钩子，在钩子触发时执行 npx lint-staged，过滤出暂存
 区的代码，去执行后续的代码检测任务
@@ -293,7 +301,7 @@ pnpm prepare
 npx husky add .husky/pre-commit "npx lint-staged"
 ```
 
-### 添加 lint-staged 的检测任务
+#### 添加 lint-staged 的检测任务
 
 在 package.json 添加 lint-staged 项（和 scripts 位置同级），对过滤出的
 js、jsx、ts、tsx、vue 文件执行 eslint 的检测和 prettier 格式化
@@ -302,4 +310,91 @@ js、jsx、ts、tsx、vue 文件执行 eslint 的检测和 prettier 格式化
 "lint-staged": {
   "*.{js,jsx,ts,tsx,vue}": ["pnpm lint", "pnpm prettier:format"]
 }
+```
+
+### commit message 校验
+
+#### 添加 git 的 commit-msg 钩子
+
+- commit-msg 钩子会在 git commit 时触发执行下面的命令添加 commit-msg 钩子，在钩
+  子触发时执行 npx commitlint，对 commit message 进行校验，当不规范时终止提交，
+  目前推荐使用 angular 规范
+
+```
+npx husky add .husky/commit-msg "npx --no -- commitlint --edit ${1}"
+```
+
+#### 修改 commitlint 配置文件
+
+在根目录下创建 .commitlintrc.cjs 文件
+
+```js
+module.exports = {
+  extends: ['@commitlint/config-conventional'],
+}
+```
+
+### commit message 格式介绍
+
+单行信息 - 用于业务代码提交时使用，业务代码一般来说更改比较多而且无法具体说明其
+信息，具体的还需要看产品文档，所以用单行信息即可。
+
+```xml
+<type>(<scope>): <subject>
+```
+
+多行信息 - 用于提交一些不经常更改的功能型代码时使用，如：某个功能函数的新增、修
+改或重构，目录结构的调整（工程化调整），架构的更改等，这些我们需要进行详细说明防
+止出现遗忘
+
+```xml
+<type>(<scope>): <subject>
+<BLANK LINE> // 空行
+<body>
+<BLANK LINE>
+<footer>
+```
+
+字段说明
+
+- type：类型
+
+  | 类型     | 描述                                 |
+  | -------- | ------------------------------------ |
+  | build    | 发布版本                             |
+  | chore    | 改变构建流程、或者增加依赖库、工具等 |
+  | ci       | 持续集成修改                         |
+  | feat     | 新特性                               |
+  | fix      | 修改问题                             |
+  | perf     | 优化相关，比如提升性能、体验         |
+  | refactor | 代码重构                             |
+  | revert   | 回滚到上一个版本                     |
+  | style    | 代码格式修改                         |
+  | test     | 测试用例修改                         |
+
+- scope：影响的范围, 比如: \*（全局），route, component, utils,
+  build，readme，css 等
+- subject：概述，建议符
+  合[50/72 formatting](https://stackoverflow.com/questions/2290016/git-commit-messages-50-72-formatting)
+- body：具体修改内容，描述为什么修改, 做了什么样的修改, 以及开发的思路等等，可以
+  分为多行，建议符
+  合[50/72 formatting](https://stackoverflow.com/questions/2290016/git-commit-messages-50-72-formatting)
+- footer：一些备注, 通常是 Breaking Changes（重要改动） 或 Closed Issues（修复
+  Bug 的链接）
+
+50/72 formatting 的简要总结：
+
+- 第一行不超过 50 个字符
+- 然后是一个空行
+- 剩余的文本应以 72 个字符换行
+
+示例
+
+```xml
+feat(eslint): 集成eslint
+
+1. vscode安装Eslint扩展即可保存时自动格式化
+2. 运行 pnpm lint 可全局进行格式化
+
+可浏览README文件了解细节
 ```

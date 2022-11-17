@@ -20,6 +20,8 @@ pnpm create vite vite-vue3-template --template vue-ts
 
 ## 集成 eslint 和 prettier
 
+我们需要先安装这两个 vscode 插件 ESlint 和 Prettier
+
 - eslint：代码检测工具，检测代码的语法错误和潜在的 Bug，目的是保证团队之间代码一
   致性和避免错误
 - prettier：代码格式化工具，用于检测代码中的格式问题，比如单行代码长度、tab 长度
@@ -397,4 +399,112 @@ feat(eslint): 集成eslint
 2. 运行 pnpm lint 可全局进行格式化
 
 可浏览README文件了解细节
+```
+
+## 集成 stylelint
+
+我们需要先安装 Stylelint 这个 vscode 插件
+
+- stylelint - css 代码检查器，帮助我们规避 css 代码中的错误并保持代码风格的一致
+
+### 安装依赖
+
+```
+pnpm install stylelint stylelint-config-standard stylelint-config-standard-scss stylelint-config-prettier postcss-html stylelint-config-recommended-vue stylelint-config-recess-order postcss -D
+
++ postcss-html 1.5.0
++ stylelint-config-prettier 9.0.4
++ stylelint-config-recess-order 3.0.0
++ stylelint-config-recommended-vue 1.4.0
++ stylelint-config-standard-scss 6.1.0
++ postcss 8.4.19
+```
+
+- stylelint - Stylelint 核心代码库
+- stylelint-config-standard - Stylelint 官方推荐规则
+- stylelint-config-standard-scss - Stylelint 官方推荐 scss 规则
+- stylelint-config-prettier - 关闭所有不必要的或可能与 Prettier 冲突的规则
+- postcss-html - 用于解析 HTML（和类似 HTML）的 PostCSS 语法，可以用于识别 html
+  或者 vue 中的样式
+- stylelint-config-recommended-vue - 共享 Vue 配置，依赖于 postcss-html
+- stylelint-config-recess-order - 用于属性排序
+
+### 修改 stylelint 配置文件
+
+在根目录下创建 .stylelintrc.cjs 文件
+
+```js
+// .stylelintrc.cjs
+
+module.exports = {
+  root: true,
+  extends: [
+    'stylelint-config-standard',
+    'stylelint-config-standard-scss',
+    'stylelint-config-recommended-vue/scss',
+    'stylelint-config-recess-order',
+    'stylelint-config-prettier',
+  ],
+  overrides: [
+    // 扫描 .vue/html 文件中的<style>标签内的样式
+    {
+      files: ['**/*.{vue,html}'],
+      customSyntax: 'postcss-html',
+    },
+  ],
+}
+```
+
+### 修改 stylelint 忽略配置文件
+
+在根目录下创建 .stylelintignore 文件
+
+```
+public
+dist
+```
+
+### 增加 stylelint 检测和格式化命令
+
+在 package.json 的 scripts 增加 lint:style 命令
+
+```json
+"scripts": {
+  "prettier:format": "prettier --config .prettierrc.cjs src/**/*.{js,jsx,ts,tsx,vue} --write"
+},
+```
+
+### 结合 vite 使用
+
+- vite-plugin-stylelint - vite 的插件，让项目可以方便的得到 stylelint 的支持，完
+  成 stylelint 的配置后，可以快速集成到 vite 中，方便开发者第一时间发现不符合
+  stylelint 规范的提示
+
+```
+pnpm install vite-plugin-stylelint -D
+
++ vite-plugin-stylelint 3.0.8
+```
+
+```ts
+// vite.config.ts
+
+import stylelintPlugin from 'vite-plugin-stylelint'
+plugins: [vue(), eslintPlugin(), stylelintPlugin({ fix: true })], // fix: true 自动修复
+```
+
+### 结合 lint-staged 使用
+
+添加到 lint-staged 中，对暂存区的文件样式进行格式化
+
+```json
+"lint-staged": {
+  "*.{js,jsx,ts,tsx,vue}": [
+    "pnpm lint",
+    "pnpm prettier:format"
+  ],
+  "*.{html,css,sass,scss,vue}": [
+    "pnpm lint:style"
+  ]
+}
 ```

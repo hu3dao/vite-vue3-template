@@ -28,11 +28,12 @@ pnpm create vite vite-vue3-template --template vue-ts
   、空格、逗号表达式等
 - 区别和联系：eslint 偏向于把控代码的代码质量，prettier 偏向于统一项目的编码风格
   ，eslint 也有小部分代码格式化功能，一般和 prettier 结合使用
+- eslint-import-resolver-alias - 让 import 时可以使用别名（@）
 
 ### 安装依赖
 
 ```
-pnpm install eslint eslint-plugin-vue eslint-config-prettier prettier eslint-plugin-prettier eslint-plugin-import eslint-config-airbnb-base @typescript-eslint/eslint-plugin @typescript-eslint/parser -D
+pnpm install eslint eslint-plugin-vue eslint-config-prettier prettier eslint-plugin-prettier eslint-plugin-import eslint-config-airbnb-base @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-import-resolver-alias -D
 ```
 
 ```
@@ -45,6 +46,7 @@ pnpm install eslint eslint-plugin-vue eslint-config-prettier prettier eslint-plu
 + prettier 2.7.1
 + @typescript-eslint/eslint-plugin 5.43.0
 + @typescript-eslint/parser 5.43.0
++ eslint-import-resolver-alias 1.1.2
 ```
 
 - eslint - eslint 检测代码的核心库

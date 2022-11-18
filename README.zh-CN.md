@@ -213,10 +213,7 @@ module.exports = {
   // 使用默认的折行标准
   proseWrap: 'always',
   // 根据显示样式决定 html 要不要折行
-  htmlWhitespaceSensitivity: 'css'
-}
-
-
+  htmlWhitespaceSensitivity: 'css',
 }
 ```
 

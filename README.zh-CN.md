@@ -28,12 +28,12 @@ pnpm create vite vite-vue3-template --template vue-ts
   、空格、逗号表达式等
 - 区别和联系：eslint 偏向于把控代码的代码质量，prettier 偏向于统一项目的编码风格
   ，eslint 也有小部分代码格式化功能，一般和 prettier 结合使用
-- eslint-import-resolver-alias - 让 import 时可以使用别名（@）
+- eslint-import-resolver-typescript - 让 import 时可以使用别名（@），
 
 ### 安装依赖
 
 ```
-pnpm install eslint eslint-plugin-vue eslint-config-prettier prettier eslint-plugin-prettier eslint-plugin-import eslint-config-airbnb-base @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-import-resolver-alias -D
+pnpm install eslint eslint-plugin-vue eslint-config-prettier prettier eslint-plugin-prettier eslint-plugin-import eslint-config-airbnb-base @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-import-resolver-typescript -D
 ```
 
 ```
@@ -46,7 +46,7 @@ pnpm install eslint eslint-plugin-vue eslint-config-prettier prettier eslint-plu
 + prettier 2.7.1
 + @typescript-eslint/eslint-plugin 5.43.0
 + @typescript-eslint/parser 5.43.0
-+ eslint-import-resolver-alias 1.1.2
++ eslint-import-resolver-typescript 3.5.2
 ```
 
 - eslint - eslint 检测代码的核心库
@@ -118,8 +118,19 @@ module.exports = {
    */
   plugins: ['vue', '@typescript-eslint', 'prettier'],
   // 自定义规则，优先级最高，覆盖上面extends集成的第三方规则，根据项目实际情况定义,一般情况下不要写太多自定义规则
+  settings: {
+    'import/resolver': {
+      typescript: {}, // 读取tsconfig.json到eslint，实现别名不报错
+    },
+  },
   rules: {
     'import/no-extraneous-dependencies': 'off',
+    // 对后缀的检测
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      { js: 'never', jsx: 'never', ts: 'never', tsx: 'never' },
+    ],
     'no-param-reassign': 'off',
     'vue/multi-word-component-names': 'off',
     'vue/attribute-hyphenation': 'off',

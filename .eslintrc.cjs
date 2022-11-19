@@ -44,15 +44,18 @@ module.exports = {
   plugins: ['vue', '@typescript-eslint', 'prettier'],
   // 自定义规则，优先级最高，覆盖上面extends集成的第三方规则，根据项目实际情况定义,一般情况下不要写太多自定义规则
   settings: {
-    // 设置项目内的别名
     'import/resolver': {
-      alias: {
-        map: [['@', './src']],
-      },
+      typescript: {}, // 读取tsconfig.json到eslint，实现别名不报错
     },
   },
   rules: {
     'import/no-extraneous-dependencies': 'off',
+    // 对后缀的检测
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      { js: 'never', jsx: 'never', ts: 'never', tsx: 'never' },
+    ],
     'no-param-reassign': 'off',
     'vue/multi-word-component-names': 'off',
     'vue/attribute-hyphenation': 'off',
